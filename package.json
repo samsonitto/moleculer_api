@@ -4,13 +4,15 @@
   "description": "My Moleculer-based microservices project",
   "scripts": {
     "dev": "moleculer-runner --repl --hot services/**/*.service.js",
-    "start": "moleculer-runner --instances=max services",
+    "start": "moleculer-runner",
     "cli": "moleculer connect NATS",
     "ci": "jest --watch",
     "test": "jest --coverage",
     "dc:up": "docker-compose up --build -d",
     "dc:logs": "docker-compose logs -f",
-    "dc:down": "docker-compose down"
+    "dc:down": "docker-compose down",
+    "startForever": "forever start --minUptime 1000 --spinSleepTime 1000 ./node_modules/.bin/moleculer-runner --instances=max services",
+    "stop": "forever stop ./node_modules/.bin/moleculer-runner"
   },
   "keywords": [
     "microservices",
