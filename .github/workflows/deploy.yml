@@ -14,7 +14,7 @@ jobs:
         run: echo "SECRET_VALUE=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
 
       - name: Print Secret Value
-        run: echo "Secret Value: $SECRET_VALUE"
+        run: echo "Secret Value $SECRET_VALUE"
 
       - name: Checkout Repository
         uses: actions/checkout@v2
