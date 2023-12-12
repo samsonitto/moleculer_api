@@ -16,6 +16,7 @@ In the terminal, try the following commands:
 - `call products.list` - List the products (call the `products.list` action).
 
 
+
 ## Services
 - **api**: API Gateway services
 - **greeter**: Sample service with `hello` and `welcome` actions.
