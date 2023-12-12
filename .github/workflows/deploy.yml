@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up environment
+        run: echo "SECRET_VALUE=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
+
+      - name: Print Secret Value
+        run: echo "Secret Value: $SECRET_VALUE"
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
