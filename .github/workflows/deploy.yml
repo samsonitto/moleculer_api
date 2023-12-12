@@ -46,6 +46,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
           script: |
-            docker stop your-moleculer-app || true
-            docker rm your-moleculer-app || true
-            docker run -d --name your-moleculer-app -p 3000:5000 samsoninho/moleculer_api
+            docker stop samsoninho/moleculer_api || true
+            docker rm samsoninho/moleculer_api || true
+            docker run -d --name samsoninho/moleculer_api -p 3000:5000 samsoninho/moleculer_api
