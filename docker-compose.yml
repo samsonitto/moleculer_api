@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.2"
 
 services:
 
@@ -6,16 +6,19 @@ services:
     build:
       context: .
     image: moleculer_api
+    container_name: moleculer_api
     env_file: docker-compose.env
     environment:
-      SERVICES: api
-      PORT: 3000
+      SERVICES: api # Runner will start only the 'api' service in this container
+      PORT: 3000    # Port of API gateway
     depends_on:
       - nats
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"
-      - "traefik.http.services.api-gw.loadbalancer.server.port=3000"
+      - "traefik.backend=api"
+      - "traefik.port=3000"
+      - "traefik.frontend.entryPoints=http"
+      - "traefik.frontend.rule=PathPrefix:/"
     networks:
       - internal
 
@@ -23,56 +26,44 @@ services:
     build:
       context: .
     image: moleculer_api
+    container_name: moleculer_greeter
     env_file: docker-compose.env
     environment:
-      SERVICES: greeter
+      SERVICES: greeter # Runner will start only the 'greeter' service in this container
+    labels:
+      - "traefik.enable=false"
     depends_on:
       - nats
-    networks:
-      - internal
-
-  products:
-    build:
-      context: .
-    image: moleculer_api
-    env_file: docker-compose.env
-    environment:
-      SERVICES: products
-    depends_on:
-      - mongo
-      - nats
-    networks:
-      - internal
-
-  mongo:
-    image: mongo:4
-    volumes:
-      - data:/data/db
     networks:
       - internal
 
   nats:
-    image: nats:2
+    image: nats
+    labels:
+      - "traefik.enable=false"
     networks:
       - internal
 
   traefik:
-    image: traefik:v2.4
+    image: traefik:1.7
+    container_name: traefik
     command:
-      - "--api.insecure=true" # Don't do that in production!
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      - "--api"
+      - "--docker"
+      - "--docker.watch"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=traefik"
+      - "traefik.port=8080"
     ports:
       - 3000:80
       - 3001:8080
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
     networks:
       - internal
       - default
 
 networks:
   internal:
-
-volumes:
-  data:

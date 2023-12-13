@@ -1,20 +1,14 @@
-# Use a lightweight Node.js image
-FROM node:14-alpine
+FROM node:8-alpine
 
-# Set the working directory inside the container
-WORKDIR /usr/src/app
+ENV NODE_ENV=production
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+RUN mkdir /app
+WORKDIR /app
 
-# Install app dependencies
+COPY package.json .
+
 RUN npm install --production
 
-# Copy the rest of the application code
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 5000
-
-# Start the app
-CMD ["npm", "start"]
+CMD ["npm", "start"]  # Execute moleculer-runner
