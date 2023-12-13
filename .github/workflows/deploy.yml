@@ -10,14 +10,18 @@ jobs:
     runs-on: ubuntu-latest
     environment: main
     steps:
-      - name: Set up environment
-        run: echo "SECRET_VALUE=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV
-
-      - name: Print Secret Value
-        run: echo "Secret Value ${{ secrets.DOCKER_USERNAME }}"
-
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
+      - name: Install Dependencies and Build Moleculer App
+        run: |
+          npm install
+          npm run build
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -46,6 +50,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
           script: |
-            docker stop samsoninho/moleculer_api || true
-            docker rm samsoninho/moleculer_api || true
-            docker run -d --name samsoninho/moleculer_api -p 3000:5000 samsoninho/moleculer_api
+            docker stop moleculer_api || true
+            docker rm moleculer_api || true
+            docker run -d --name moleculer_api -p 3030:5000 samsoninho/moleculer_api
