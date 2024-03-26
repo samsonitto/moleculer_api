@@ -51,4 +51,4 @@ jobs:
           script: |
             docker stop moleculer_api || true
             docker rm moleculer_api || true
-            docker run -d --name moleculer_api -p 3000:3000 samsoninho/moleculer_api
+            docker run -d --name moleculer_api -p 5000:3000 samsoninho/moleculer_api

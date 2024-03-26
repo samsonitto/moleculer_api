@@ -10,8 +10,11 @@ services:
     environment:
       SERVICES: api
       PORT: 3000
+    links:
+      - redis
     depends_on:
       - nats
+      - redis
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"
@@ -43,6 +46,26 @@ services:
       - nats
     networks:
       - internal
+
+  users:
+    build:
+      context: .
+    image: moleculer_api
+    env_file: docker-compose.env
+    environment:
+      SERVICES: users
+    links:
+      - redis
+      - mongo
+    depends_on:
+      - mongo
+      - redis
+      - nats
+    networks:
+      - internal
+
+  redis:
+    image: redis:alpine
 
   mongo:
     image: mongo:4
